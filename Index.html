@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shivaa Shayari World</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: #101010;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+header {
+  text-align: center;
+  padding: 25px 10px;
+  background: #202020;
+}
+h1 { color: #ff4567; }
+.search {
+  display: block;
+  width: 90%;
+  margin: 20px auto;
+  padding: 13px;
+  border-radius: 20px;
+  border: 1px solid #555;
+  background: #242424;
+  color: white;
+}
+.categories {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px;
+}
+button {
+  background: #e83e60;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 11px 15px;
+  cursor: pointer;
+}
+.categories button.active {
+  background: #ff8ba0;
+  color: #181818;
+}
+.card {
+  background: #242424;
+  padding: 20px;
+  margin: 15px;
+  border-radius: 15px;
+  text-align: center;
+  border: 1px solid #393939;
+}
+.poetry {
+  font-size: 19px;
+  line-height: 1.8;
+  white-space: pre-line;
+}
+h2 {
+  text-align: center;
+  color: #ff718b;
+}
+footer {
+  text-align: center;
+  padding: 20px;
+  color: #aaa;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🥀 Shivaa Shayari World</h1>
+  <p>दिल की बात, शायरी के साथ ❤️</p>
+</header>
+
+<input id="search" class="search"
+  placeholder="🔍 शायरी खोजें..."
+  oninput="showPoetry()">
+
+<div class="categories" id="categories">
+  <button class="active" onclick="setCategory('सभी',this)">सभी</button>
+  <button onclick="setCategory('दर्द',this)">💔 दर्द</button>
+  <button onclick="setCategory('प्यार',this)">❤️ प्यार</button>
+  <button onclick="setCategory('अकेलापन',this)">🥀 अकेलापन</button>
+  <button onclick="setCategory('एटीट्यूड',this)">👑 एटीट्यूड</button>
+</div>
+
+<h2>✨ शायरी संग्रह</h2>
+<div id="poetryList"></div>
+
+<footer>
+  <p>© 2026 Shivaa Shayari World</p>
+  <p>Made with ❤️ by Shiva</p>
+</footer>
+
+<script>
+const shayari = [
+  {
+    category: "दर्द",
+    text: "मुस्कुराहट के पीछे कई राज़ छुपाए हैं,\nहमने अपने ग़म सबसे छुपाए हैं... 🥀"
+  },
+  {
+    category: "दर्द",
+    text: "कुछ ख्वाब अधूरे रह जाते हैं,\nकुछ अपने दूर हो जाते हैं... 💔"
+  },
+  {
+    category: "प्यार",
+    text: "तेरी मुस्कान से रोशन मेरी शाम रहे,\nतेरे नाम से ही मेरी हर सुबह रहे... ❤️"
+  },
+  {
+    category: "प्यार",
+    text: "तेरी बातों में एक सुकून मिलता है,\nजैसे तपती धूप में छाँव मिलता है... 🌹"
+  },
+  {
+    category: "अकेलापन",
+    text: "भीड़ में रहकर भी तन्हा हैं हम,\nन जाने किसकी तलाश में खोए हैं हम... 🥀"
+  },
+  {
+    category: "अकेलापन",
+    text: "खामोशी भी अब कुछ कहने लगी है,\nतन्हाई मेरे साथ रहने लगी है... 🌙"
+  },
+  {
+    category: "एटीट्यूड",
+    text: "अपनी पहचान खुद बनाएँगे,\nवक्त आने पर सबको दिखाएँगे... 👑"
+  },
+  {
+    category: "एटीट्यूड",
+    text: "हम अपनी राह खुद बनाते हैं,\nभीड़ में नहीं, अपनी पहचान बनाते हैं... 🔥"
+  }
+];
+
+let selected = "सभी";
+
+function setCategory(category, button) {
+  selected = category;
+  document.querySelectorAll(".categories button")
+    .forEach(btn => btn.classList.remove("active"));
+  button.classList.add("active");
+  showPoetry();
+}
+
+function showPoetry() {
+  const query = document.getElementById("search")
+    .value.toLowerCase();
+  const list = document.getElementById("poetryList");
+  list.innerHTML = "";
+
+  const filtered = shayari.filter(item =>
+    (selected === "सभी" || item.category === selected) &&
+    item.text.toLowerCase().includes(query)
+  );
+
+  filtered.forEach(item => {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const p = document.createElement("p");
+    p.className = "poetry";
+    p.textContent = item.text;
+
+    const btn = document.createElement("button");
+    btn.textContent = "📋 शायरी कॉपी करें";
+    btn.onclick = async () => {
+      try {
+        await navigator.clipboard.writeText(item.text);
+        alert("शायरी कॉपी हो गई! ❤️");
+      } catch {
+        alert("शायरी को दबाकर कॉपी करें।");
+      }
+    };
+
+    card.append(p, btn);
+    list.appendChild(card);
+  });
+
+  if (filtered.length === 0) {
+    list.textContent = "कोई शायरी नहीं मिली";
+  }
+}
+
+showPoetry();
+</script>
+</body>
+  
+<div style="text-align:center; padding:20px;">
+  <a href="https://www.instagram.com/writer__shivaa/"
+     target="_blank"
+     style="display:inline-block;
+     background:#E1306C;
+     color:white;
+     padding:14px 25px;
+     border-radius:30px;
+     text-decoration:none;
+     font-size:18px;">
+    📸 Follow @writer__shivaa
+  </a>
+</div>
+
+</html>
